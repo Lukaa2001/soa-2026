@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+option csharp_namespace = "Explorer.Grpc.Stakeholders";
+
+package stakeholders;
+
+// RPC contract served by the Stakeholders service. Consumed over gRPC by the
+// gateway (gateway -> service) and by the Blog service (service -> service).
+service StakeholdersGrpc {
+  rpc GetUser (UserRequest) returns (UserReply);
+  rpc GetPersonEmail (PersonRequest) returns (EmailReply);
+}
+
+message UserRequest {
+  int64 user_id = 1;
+}
+
+message UserReply {
+  int64 id = 1;
+  string username = 2;
+}
+
+message PersonRequest {
+  int64 person_id = 1;
+}
+
+message EmailReply {
+  string email = 1;
+}
