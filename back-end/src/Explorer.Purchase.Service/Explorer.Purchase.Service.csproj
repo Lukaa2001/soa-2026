@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Explorer.ServiceShared\Explorer.ServiceShared.csproj" />
+    <ProjectReference Include="..\Modules\Payments\Explorer.Payments.Infrastructure\Explorer.Payments.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>
