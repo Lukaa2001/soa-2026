@@ -1,0 +1,48 @@
+<div class="followers-container">
+  <div class="button-container">
+    <button id="followersBtn" [class.active]="showFollowers" (click)="toggleFollowers()">Followers</button>
+    <button id="followingBtn" [class.active]="showFollowing" (click)="toggleFollowing()">Following</button>
+    <button id="recommendationsBtn" [class.active]="showRecommendations" (click)="toggleRecommendations()">Suggestions</button>
+    <button id="allUsersBtn" [class.active]="showAllUsers" (click)="toggleAllUsers()">All users</button>
+  </div>
+
+  <div class="followers-list">
+    <!-- Users who follow me -->
+    <div class="followers" *ngIf="showFollowers">
+      <div class="follower" *ngFor="let fol of followers">
+        {{ followersUsernames[fol.followingId] }}
+        <button class="btn-in" *ngIf="isFollowing(fol.followingId)" (click)="unfollowConfirmation(fol.followingId)">Unfollow</button>
+        <button class="btn-in" *ngIf="!isFollowing(fol.followingId)" (click)="followUser(fol.followingId)">Follow</button>
+      </div>
+      <div class="follower" *ngIf="followers.length === 0">No followers yet.</div>
+    </div>
+
+    <!-- Users I follow -->
+    <div class="following" *ngIf="showFollowing">
+      <div class="follower" *ngFor="let fol of following">
+        {{ followingUsernames[fol.followedId] }}
+        <button class="btn-in" (click)="unfollowConfirmation(fol.followedId)">Unfollow</button>
+      </div>
+      <div class="follower" *ngIf="following.length === 0">You are not following anyone.</div>
+    </div>
+
+    <!-- Suggested profiles (followed by people you follow) -->
+    <div class="following" *ngIf="showRecommendations">
+      <div class="follower" *ngFor="let rec of recommendations">
+        {{ recommendationsUsernames[rec.followedId] }}
+        <button class="btn-in" (click)="followUser(rec.followedId)">Follow</button>
+      </div>
+      <div class="follower" *ngIf="recommendations.length === 0">No suggestions right now.</div>
+    </div>
+
+    <!-- All users: follow anyone you don't already follow -->
+    <div class="following" *ngIf="showAllUsers">
+      <div class="follower" *ngFor="let u of allUsers">
+        {{ u.username }}
+        <button class="btn-in" *ngIf="isFollowing(u.id)" (click)="unfollowConfirmation(u.id)">Unfollow</button>
+        <button class="btn-in" *ngIf="!isFollowing(u.id)" (click)="followUser(u.id)">Follow</button>
+      </div>
+      <div class="follower" *ngIf="allUsers.length === 0">No other users.</div>
+    </div>
+  </div>
+</div>
