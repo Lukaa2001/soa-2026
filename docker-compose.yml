@@ -1,0 +1,188 @@
+name: explorer-soa
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Explorer — SOA microservices.
+# Services are added phase by phase. Databases + gateway are defined first.
+# All containers share the default "explorer-soa_default" network and reach each
+# other by service name (e.g. http://stakeholders:8080).
+# ─────────────────────────────────────────────────────────────────────────────
+
+services:
+
+  # ───────────────────────── Databases ─────────────────────────
+
+  stakeholders-db:
+    image: postgres:13
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: explorer-stakeholders
+    volumes:
+      - stakeholders-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DATABASE_USERNAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  tours-db:
+    image: postgres:13
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: explorer-tours
+    volumes:
+      - tours-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DATABASE_USERNAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  purchase-db:
+    image: postgres:13
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: explorer-purchase
+    volumes:
+      - purchase-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DATABASE_USERNAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  blog-mongo:
+    image: mongo:7
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+    volumes:
+      - blog-data:/data/db
+
+  followers-neo4j:
+    image: neo4j:5
+    restart: unless-stopped
+    environment:
+      NEO4J_AUTH: ${NEO4J_AUTH}
+    ports:
+      - "7474:7474"   # Neo4j browser (optional, for debugging)
+    volumes:
+      - followers-data:/data
+
+  # ───────────────────────── Gateway ─────────────────────────
+
+  gateway:
+    build:
+      context: ./back-end/src
+      dockerfile: Explorer.Gateway/Dockerfile
+    restart: unless-stopped
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      GATEWAY_CORS_ORIGINS: ${GATEWAY_CORS_ORIGINS}
+    ports:
+      - "8080:8080"   # the only port the Angular client talks to
+
+  # ───────────────────────── Application services ─────────────────────────
+
+  stakeholders:
+    build:
+      context: ./back-end/src
+      dockerfile: Explorer.Stakeholders.Service/Dockerfile
+    restart: unless-stopped
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      DATABASE_HOST: stakeholders-db
+      DATABASE_PORT: 5432
+      DATABASE_SCHEMA: explorer-stakeholders
+      DATABASE_SCHEMA_NAME: stakeholders
+      DATABASE_USERNAME: ${DATABASE_USERNAME}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      JWT_KEY: ${JWT_KEY}
+      JWT_ISSUER: ${JWT_ISSUER}
+      JWT_AUDIENCE: ${JWT_AUDIENCE}
+    depends_on:
+      stakeholders-db:
+        condition: service_healthy
+
+  tours:
+    build:
+      context: ./back-end/src
+      dockerfile: Explorer.Tours.Service/Dockerfile
+    restart: unless-stopped
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      DATABASE_HOST: tours-db
+      DATABASE_PORT: 5432
+      DATABASE_SCHEMA: explorer-tours
+      DATABASE_SCHEMA_NAME: tours
+      DATABASE_USERNAME: ${DATABASE_USERNAME}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      JWT_KEY: ${JWT_KEY}
+      JWT_ISSUER: ${JWT_ISSUER}
+      JWT_AUDIENCE: ${JWT_AUDIENCE}
+      PURCHASE_URL: http://purchase:8080/
+    depends_on:
+      tours-db:
+        condition: service_healthy
+
+  purchase:
+    build:
+      context: ./back-end/src
+      dockerfile: Explorer.Purchase.Service/Dockerfile
+    restart: unless-stopped
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      DATABASE_HOST: purchase-db
+      DATABASE_PORT: 5432
+      DATABASE_SCHEMA: explorer-purchase
+      DATABASE_SCHEMA_NAME: payments
+      DATABASE_USERNAME: ${DATABASE_USERNAME}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      JWT_KEY: ${JWT_KEY}
+      JWT_ISSUER: ${JWT_ISSUER}
+      JWT_AUDIENCE: ${JWT_AUDIENCE}
+    depends_on:
+      purchase-db:
+        condition: service_healthy
+
+  blog:
+    build:
+      context: ./back-end/src
+      dockerfile: Explorer.Blog.Service/Dockerfile
+    restart: unless-stopped
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      MONGO_CONNECTION: mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@blog-mongo:27017
+      MONGO_DATABASE: explorer-blog
+      JWT_KEY: ${JWT_KEY}
+      JWT_ISSUER: ${JWT_ISSUER}
+      JWT_AUDIENCE: ${JWT_AUDIENCE}
+      STAKEHOLDERS_GRPC: http://stakeholders:8081
+      FOLLOWERS_URL: http://followers:8080/
+    depends_on:
+      - blog-mongo
+
+  followers:
+    build:
+      context: ./back-end/followers-service
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      NEO4J_URI: bolt://followers-neo4j:7687
+      NEO4J_USER: neo4j
+      NEO4J_PASSWORD: superSecret123
+    depends_on:
+      - followers-neo4j
+
+volumes:
+  stakeholders-data:
+  tours-data:
+  purchase-data:
+  blog-data:
+  followers-data:
