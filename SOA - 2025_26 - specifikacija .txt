@@ -1,0 +1,143 @@
+﻿SOA - Turistička aplikacija
+________________
+
+
+Opšte informacije o projektu
+Projekat nosi 60 bodova i postoje dve mogućnosti odbrane:
+1. Projekat za niži broj bodova - razvija se samostalno, bez tima, u bilo kom roku.
+Za maksimalno 30 bodova sa projekta:
+* Projekat mora biti dokerizovan.
+* Projekat mora koristiti NoSQL bazu podataka.
+* Projekat mora biti dekomponovan na minimum tri mikroservisa + gateway.
+* Moraju biti urađene tačke: 1, 4, 5, 6 (bez podrške za markdown), 9, 10, 11 (bez implementacije ključnih tačaka između početne i krajnje), 14, 16 i 17.
+Za maksimalno 40 bodova sa projekta:
+* Projekat mora ispuniti sve uslove za 30 bodova, uz dodatnu implementaciju RPC komunikacije.
+________________
+
+
+2. Timski projekat - ukoliko radite projekat u timu, obavezno pratite dinamiku kontrolnih tačaka (KT) opisanu u nastavku. Za svaku KT je navedeno koliko poena svaki član tima treba da sakupi kako bi ostvario maksimalan broj bodova na projektu.
+Pravila podele posla su sledeća: ako nešto nosi 1 poen, to radi jedan član tima; ako nešto nosi 2 poena, na tome mogu da rade dva člana tima koji međusobno dele posao; ako nešto nosi 3 poena, na tome mogu da rade tri člana tima koji međusobno dele posao, itd. Poeni nisu direktno vezani za broj bodova na KT, služe isključivo kao orijentir za ravnomernu podelu posla unutar tima.
+Napomena: Ukoliko radite u timu, odbrana kroz KT je obavezna. Morate se pojaviti na svakoj KT i biti u stanju da objasnite rešenje koje ste kreirali. Svaka KT uključuje nekoliko eliminacionih pitanja iz teorije vezanih za deo koji ste radili. Ukoliko odgovori budu netačni, nećete moći da branite tu KT. Bodovi izgubljeni na jednoj KT mogu se nadoknaditi jedino na narednoj KT, i to maksimalno do 75% izgubljenih bodova.
+________________
+________________
+
+
+PRVA KT - nedelja 13.04. (Svaki student treba da sakupi 3 poena: 2 na razvoj funkcionalnosti i 1 na rad sa Dockerom)
+1. Razvoj REST servisa
+Potrebno je napisati dva REST servisa (Stakeholders i Blog) i u okviru njih implementirati funkcionalnosti 1–8. Svaka funkcionalnost nosi po jedan poen.
+Servisi mogu biti napisani u bilo kom jeziku, ali na finalnoj KT morate imati servise u najmanje tri različita programska jezika pri čemu jedan obavezno u Golangu. U okviru timu, svaki podtim od dva studenta radi na jednom servisu i svaki student implementira dve funkcionalnosti.
+Napomena: Svaki servis je nezavisan projekat koji se pokreće na sopstvenom portu i ima svoju bazu podataka, te ga je moguće direktno pozvati sa klijenta. Frontend nije obavezan na prvoj KT, ali mora postojati na poslednjoj.
+2. Dokerizacija servisa
+Dokerizacija nosi ukupno 4 poena i obuhvata sledeće korake:
+* 2.1 Napisati Dockerfile za svaki servis.
+* 2.2 Napisati docker-compose fajl koji podiže sve servise zajedno sa odgovarajućim bazama podataka.
+* 2.3 Omogućiti komunikaciju između izolovanih kontejnera međusobno, kao i između kontejnera i klijentske aplikacije.
+________________
+
+
+DRUGA KT - nedelja 18.05. (Svaki student treba da sakupi 3 poena)
+Potrebno je implementirati funkcionalnosti 9–14. Svaka funkcionalnost nosi po jedan poen, osim funkcionalnosti 9 koja nosi 2 poena i detaljnije je opisana ispod u tački 2.
+1. NoSQL dokumentna baza (1 poen)
+U okviru nekog od postojećih izolovanih servisa koristiti dokumentnu NoSQL bazu podataka.
+2. Follower mikroservis (2 poena)
+Napraviti mikroservis koji vodi računa o međusobnom praćenju korisnika (Follower Microservice). Tehnologiju implementacije možete sami odabrati. Mikroservis treba da omogući sledeće:
+* 2.1 Korisnici mogu da zaprate druge korisnike.
+* 2.2 Korisnici mogu da čitaju blogove isključivo onih korisnika koje prate.
+* 2.3 Sistem korisnicima prikazuje preporuke profila koje bi mogli da zaprate, na osnovu toga koga prate osobe koje oni već prate.
+* 2.4 Sve funkcionalnosti iz ove tačke realizovati pomoću graf NoSQL baze (preporuka: Neo4j).
+3. API Gateway (2 poena)
+Postaviti izolovani gateway za čitavu aplikaciju koji usmerava sve zahteve korisnika ka odgovarajućim servisima. Aplikacija mora imati najmanje tri izolovana servisa i jedan gateway.
+4. Dokerizacija (2 poena)
+Novi mikroservis, nove baze podataka i gateway potrebno je dokerizovati i pokrenuti kroz docker-compose, na isti način kao i za prvu KT.
+Napomena: Ukoliko nijedan član tima nema mašinu dovoljno snažnu da pokrene sve servise istovremeno, dozvoljena je prezentacija bez aktivnog Dockera, ali u tom slučaju morate pokazati ispravno napisane Dockerfile i docker-compose fajlove.
+________________
+
+
+TREĆA KT - nedelja 01.06. (Svaki student treba da sakupi 3 poena)
+Potrebno je implementirati funkcionalnosti 15, 16 i 17. Svaka funkcionalnost nosi po 2 poena.
+1. RPC komunikacija (4 poena)
+Svi treba da prevedu po dva zahteva na RPC protokol, od gateway-a do servisa, i potencijalno između samih servisa.
+2. SAGA obrazac (2 poena)
+Potrebno je implementirati dva slučaja SAGA obrasca negde u aplikaciji. Svaki slučaj mora uključivati komunikaciju između najmanje dva mikroservisa. Potrebno je osmisliti nove ili iskoristiti postojeće funkcionalnosti koje prirodno uključuju više mikroservisa, i nad njima primeniti SAGA obrazac.
+________________
+
+
+ČETVRTA KT - nedelja 15.06. (Svaki student treba da sakupi 1 poen)
+Četiri člana tima treba da uspostave tracing, logovanje i monitoring za backend aplikaciju. (4 poena)
+* Neophodno je implementirati tracing barem negde u okviru mikroservisne aplikacije i prikazati rezultate u nekom alatu za vizualizaciju.
+* Neophodno je implementirati agregaciju logova barem negde u okviru mikroservisne aplikacije i prikazati rezultate u nekom alatu za vizualizaciju.
+Metrike koje je potrebno pratiti:
+* Metrike host mašine: iskorišćenost procesora, RAM memorije, fajl sistema i protok mrežnog saobraćaja.
+* Metrike kontejnera: iskorišćenost procesora, RAM memorije, fajl sistema i protok mrežnog saobraćaja.
+________________
+
+
+
+
+SPECIFIKACIJA PROJEKTA
+Uloge u sistemu
+* Administrator
+* Vodič (kreator tura)
+* Turista
+Funkcionalni zahtevi
+Predlog podele na mikroservise: Stakeholders servis, Auth servis (opciono, funkcionalnosti za autentifikaciju mogu biti i u Stakeholders servisu), Blog servis, Purchase servis, Followers servis, Tour servis.
+Funkcionalni zahtevi - Prva KT
+1. Neregistrovani korisnik može da se registruje i odabere ulogu Vodiča ili Turiste (admini se ubaciju direktno u bazu). Nalog obuhvata: korisničko ime, lozinku, mejl, ulogu (vodič, turista, administrator).
+
+2. Admin može da pregleda sve naloge korisnika (ne treba da vidi lozinke).
+
+
+   3. Admin može da blokira naloge kreirane od strane korisnika.
+
+
+   4. Svaki korisnik (vodič, turista) može da pregleda svoj profil koji obuhvata: ime, prezime, profilnu sliku, biografiju, moto (citat).
+
+
+   5. Korisnik može da menja informacije sa svog profila.
+
+
+   6. Korisnik može da kreira blog koji obuhvata: naslov (temu), opis, datum kreiranja, slike (opciono). Za opis bloga treba obezbediti podršku za markdown jezik.
+        
+   7. Korisnik može da ostavi komentar na blog koji obuhvata: informacije o korisniku koji je kreirao objavu, vreme kreiranja, tekst, vreme poslednje izmene.
+
+
+   8. Korisnik može da lajkuje blog objavu. Svaki korisnik može da lajkuje objavu najviše jednom, a može i da ukloni svoj lajk. Broj lajkova se prikazuje uz objavu.
+Funkcionalni zahtevi - Druga KT
+   9. Korisnik može da zaprati druge korisnike (klikom na button follow), tek nakon što je zapratio korisnika može da ostavi komentar na njegov blog (ova funkcionalnost je detaljno opisana u uputstvu iznad za 2. KT).
+
+
+   10. Autor može da kreira turu tako što navodi naziv ture, opis, težinu i tagove koji opisuju turu. Pri početnom kreiranju ture, tura treba da ima status draft i da joj je cena postavljena na 0. Autor može da vidi sve svoje ture.
+
+
+   11. Autor navodi ključne tačke za turu tako što na mapi bira određenu lokaciju. Informacija o geografskoj širini i dužini se beleži, zajedno sa nazivom, opisom i slikom (npr. ključna tačka može biti neki muzej, park, spomenik).
+
+
+   12. Turista može da ostavi recenziju za određenu turu. Recenzija obuhvata: ocenu (1-5), komentar, informacije o samom turisti koji je ostavio recenziju, datum kada je posetio turu, datum kada je ostavio komentar i slike.
+
+
+   13. Omogućiti crtanje ture na mapi. Tura se na mapi crta na osnovu njenih ključnih tačaka. Takođe, treba omogućiti kreiranje novih ključnih tačaka na mapi, kao i izmenu ili brisanje postojećih. Proces kreiranja i izmene mora da obuhvati korak u kojem se selektuje određena pozicija na mapi koja će predstavljati novu koordinatu određene ključne tačke. 
+
+
+   14. Simulator pozicije je funkcionalnost koju koristimo u nedostatku mobilne aplikacije. Turista otvara stranicu za simulator koja prikazuje mapu. Mapa iscrtava njegov trenutni položaj ako ga je prethodno definisao. Turista može da klikne na mapu pri čemu simulator beleži lokaciju kao trenutnu lokaciju turiste. Za trenutnu lokaciju se beleže lat i long. Informaciju gde se turista nalazi će koristiti izvedba ture (TourExecution) definisana dole.
+
+
+Funkcionalni zahtevi - Treća KT
+   15. Tura ima tri osnovna stanja - draft, published i archived.
+U momentu kada je Autor ture uneo osnovne podatke tura može da se kreira i tada je u stanju draft. Upravljanje ključnim tačkama ture treba da bude integrisano u proces kreiranja ture. Pri dodavanju svake ključne tačke posle prve, sistem treba da izračuna i sačuva dužinu ture u kilometrima (uz pomoć mape).
+Autor ture može objaviti prethodno kreiranu turu pod sledećim uslovima:
+   1. Tura sadrži osnovne podatke (naziv ture, opis, težinu i tagove)
+   2. Tura sadrži bar dve ključne tačke.
+   3. Definisano je bar jedno vreme potrebno da se obiđe tura u zavisnosti od prevoza (npr. 120 min. peške, 45 min. biciklom). Tip prevoza je enumeracija koja uključuje peške, bicikl i automobil. 
+
+
+Objava prebacuje turu u status objavljen i postavlja DateTime kada se objava desila. Autor može da arhivira objavljene ture, gde sistem beleži vrem arhiviranja. Arhivirane ture se mogu ponovo aktivirati. Turista može da vidi samo objavljene ture gde vidi osnovne informacije i prvu ključnu tačku, ali ne vidi ostatak ture.
+
+
+   16. Turista može kupiti objavljenu turu tako što će je prvo smestiti u svoju korpu (ShoppingCart). Svaka stavka (OrderItem) u korpi sadrži ime ture, cenu i id ture.
+Korpa računa ukupnu cenu svih stavki u korpi prilikom dodavanja ili uklanjanja nečega iz korpe. Kada je turista zadovoljan stanjem u korpi, ide na checkout i za svaku stavku iz korpe dobija token (TourPurchaseToken) koji označava da je stavka kupljena.
+Turista vidi samo deo informacija o turama dok ih ne kupi: opis, dužinu, vreme prolaska, slike, početnu tačku i recenzije. Ture koje su kupljene otkrivaju sve ključne tačke. Arhivirane ture se ne mogu kupiti.
+
+
+   17. Turista može pokrenuti turu, pri čemu se kreira sesija (TourExecution). Sesija se završava kada turista završi (completed) ili napusti turu (abandoned). Tom prilikom se evidentira vreme napuštanja/kompletiranja. Kada turista pokrene turu, beleži se lokacija turiste (front-end prvo dobija lokaciju putem Position simulatora).
+Na ekranu za aktivnu turu, front-end na svakih 10 sekundi šalje zahtev da se proveri da li je turista blizu neke ključne tačke (Napomena: Prvo pita Position simulator gde se nalazi, pa onda šalje novi zahtev na back). Ako jeste, u sesiji se beleži da je turista kompletirao tu ključnu tačku i beleži se vreme kada je dostigao. Bez obzira na ishod, beleži se last activity DateTime na nivou TourExecution objekta.
+Turista može da pokrene objavljene i arhivirane ture. Kada se uvede kupovina, preduslov za pokretanje ture je da je kupljena.
