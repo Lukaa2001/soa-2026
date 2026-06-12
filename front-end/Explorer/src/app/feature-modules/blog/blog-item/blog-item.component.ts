@@ -14,6 +14,7 @@ export class BlogItemComponent implements OnInit {
     author: string;
     images: Array<string>;
     status?: Status;
+    dateCreated?: Date;
   };
   cover: string = './assets/images/blog/';
 
