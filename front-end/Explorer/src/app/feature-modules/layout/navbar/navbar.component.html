@@ -56,6 +56,13 @@
             Blog
           </button>
           <button
+            *ngIf="user && user.role === 'tourist'"
+            class="navbar-link"
+            [routerLink]="['user-location']"
+          >
+            Moja lokacija
+          </button>
+          <button
             *ngIf="user && user.role === 'administrator'"
             class="navbar-link"
             [routerLink]="['admin/equipment']"
