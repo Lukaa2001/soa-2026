@@ -10,6 +10,12 @@
         <h2 class="heading-secondary" *ngIf="user && user.username !== ''">
           {{ user.username }}
         </h2>
+        <div class="profile-details" *ngIf="userProfile">
+          <p class="full-name"><b>{{ userProfile.name }} {{ userProfile.surname }}</b></p>
+          <p class="email">{{ userProfile.email }}</p>
+          <p class="motto" *ngIf="userProfile.motto">Moto: <i>{{ userProfile.motto }}</i></p>
+          <p class="biography" *ngIf="userProfile.biography">Biografija: {{ userProfile.biography }}</p>
+        </div>
         <div class="followers-following">
           <button class="btn-num" (click)="openFollowersDialog('followers')">
             <div class="followers">
