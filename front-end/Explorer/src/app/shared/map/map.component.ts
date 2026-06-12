@@ -219,10 +219,9 @@ export class MapComponent implements AfterViewInit {
     this.distance = 0;
     let routesFound = false;
     this.routeControl = L.Routing.control({
-      router: L.routing.mapbox(
-        'YOUR_MAPBOX_PUBLIC_TOKEN',
-        { profile: 'mapbox/walking' }
-      ),
+      router: L.Routing.osrmv1({
+        serviceUrl: 'https://router.project-osrm.org/route/v1'
+      }),
       plan: L.Routing.plan(
         this.routePoints,
         {
@@ -259,10 +258,9 @@ export class MapComponent implements AfterViewInit {
       return;
     }
     const routeControl = L.Routing.control({
-      router: L.routing.mapbox(
-        'YOUR_MAPBOX_PUBLIC_TOKEN',
-        { profile: 'mapbox/walking' }
-      ),
+      router: L.Routing.osrmv1({
+        serviceUrl: 'https://router.project-osrm.org/route/v1'
+      }),
       plan: L.Routing.plan(
         waypoints,
       {
