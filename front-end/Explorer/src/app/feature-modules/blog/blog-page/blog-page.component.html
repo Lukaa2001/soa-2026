@@ -1,6 +1,7 @@
 <div class="blog-container" *ngIf="blog | async as blogData">
   <h2 class="blog-title">{{ blogData.name }}</h2>
   <p class="blog-author">Created by: {{ blogData.author }}</p>
+  <p class="blog-date">Datum kreiranja: {{ blogData.dateCreated | date:'dd.MM.yyyy. HH:mm' }}</p>
 
   <markdown ngPreserveWhitespaces [data]="blogData.description"></markdown>
   <div class="ratings-container">
