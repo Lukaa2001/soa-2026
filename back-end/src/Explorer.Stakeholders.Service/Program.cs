@@ -6,6 +6,7 @@ using Explorer.Stakeholders.Infrastructure.Database;
 using Explorer.Stakeholders.Service.Grpc;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,6 +45,15 @@ using (var scope = app.Services.CreateScope())
 
 app.UseSwagger();
 app.UseSwaggerUI();
+
+// Serve uploaded profile images (functionality 5) at /Resources/Images/*.
+var resourcesPath = Path.Combine(Directory.GetCurrentDirectory(), "Resources");
+Directory.CreateDirectory(Path.Combine(resourcesPath, "Images"));
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(resourcesPath),
+    RequestPath = "/Resources"
+});
 
 app.UseRouting();
 app.UseCors(corsPolicy);
